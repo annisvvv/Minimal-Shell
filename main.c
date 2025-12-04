@@ -57,6 +57,7 @@ int main() {
 		
 		else if (strcmp(tokens[0], "help") == 0){
 			commands();
+			return 0;
 		}
 
 		else {
