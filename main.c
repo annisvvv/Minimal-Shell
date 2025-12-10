@@ -13,6 +13,8 @@
 void input_token(){
 
 		pip = 0;
+		int i[10];
+		int y = 0;
 
 		//input command	
 		fgets(command, sizeof(command), stdin);           
@@ -23,15 +25,29 @@ void input_token(){
 		char* token = strtok(command, " ");              
 
 		while (token != NULL && count < 10) {
-			
+
 			if (strcmp(token, "|") == 0) {
+				i[y] = count;
+				y = y + 1;
             	pip++;
         	}
-
 			tokens[count++] = token;       
 			token = strtok(NULL, " ");    
 		}
 		tokens[count] = NULL;
+}
+
+void cd(char*){
+
+		if (tokens[1] == NULL) {
+			chdir(getenv("HOME"));
+		} else {
+			// Change to the specified directory
+			if (chdir(tokens[1]) != 0) {
+				perror("cd failed");
+			}
+		}
+		//continue;   // Skip fork(), go back to loop
 }
 
 int main() {
@@ -45,27 +61,10 @@ int main() {
 		else{return 1;}
 
 		input_token();
-
+		
 		if (strcmp(tokens[0], "cd") == 0) {
-
-    // If no argument: go to HOME
-			if (tokens[1] == NULL) {
-				chdir(getenv("HOME"));
-			} else {
-				// Change to the specified directory
-				if (chdir(tokens[1]) != 0) {
-					perror("cd failed");
-				}
-			}
-
-			continue;   // Skip fork(), go back to loop
+			cd(tokens[0]);
 		}
-
-		//print all the tokens from the input command
-		//int i = 0;
-		//for (i; i < count; i = i + 1) {
-		//	printf("%s", tokens[i]);	
-		//}
 		
 		else if (strcmp(tokens[0], "help") == 0){
 			commands();
@@ -84,7 +83,7 @@ int main() {
 				
 				wait(NULL);
 			}
-	}
+		}
 	}
 	return 0;
 }
