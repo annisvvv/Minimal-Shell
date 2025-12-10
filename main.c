@@ -6,19 +6,13 @@
 #include <sys/wait.h>
 #include "header.h"
 
-int main() {
-
 	char command[100];
 	char* tokens[10];
-	int count = 0;
-	
-	while (1){
-		char cwd[50];
+	int count, pip = 0;
 
-   		if (getcwd(cwd, sizeof(cwd)) !=NULL){
-			printf("%s> ", cwd);
-		}
-		else{return 1;}
+void input_token(){
+
+		pip = 0;
 
 		//input command	
 		fgets(command, sizeof(command), stdin);           
@@ -29,10 +23,28 @@ int main() {
 		char* token = strtok(command, " ");              
 
 		while (token != NULL && count < 10) {
+			
+			if (strcmp(token, "|") == 0) {
+            	pip++;
+        	}
+
 			tokens[count++] = token;       
 			token = strtok(NULL, " ");    
 		}
 		tokens[count] = NULL;
+}
+
+int main() {
+
+	while (1){
+		char cwd[50];
+
+   		if (getcwd(cwd, sizeof(cwd)) !=NULL){
+			printf("%s> ", cwd);
+		}
+		else{return 1;}
+
+		input_token();
 
 		if (strcmp(tokens[0], "cd") == 0) {
 
