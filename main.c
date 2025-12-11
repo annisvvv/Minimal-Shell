@@ -85,11 +85,9 @@ void pippe(){
 
     piped_tokens[cmd][arg] = NULL;
 
-	int cmd_count = cmd + 1;   // number of commands
+	int cmd_count = cmd + 1; // number of commands
 
-    // ---------------- EXECUTE PIPES -----------------
-
-    int oldfd = 0;     // input for next process
+    int oldfd = 0; // input for next process
     int fd[2];
 
     for (int c = 0; c < cmd_count; c++) {
@@ -97,9 +95,9 @@ void pippe(){
         pipe(fd);
         pid_t pid = fork();
 
-        if (pid == 0) {      // child
+        if (pid == 0) {  // child
 
-            dup2(oldfd, STDIN_FILENO);   // previous pipe input
+            dup2(oldfd, STDIN_FILENO); // previous pipe input
 
             if (c < cmd_count - 1) {
                 dup2(fd[1], STDOUT_FILENO); // next pipe output
@@ -114,8 +112,8 @@ void pippe(){
 
         // parent
         wait(NULL);
-        close(fd[1]);     // close write end
-        oldfd = fd[0];    // next command reads from this pipe
+        close(fd[1]);  // close write end
+        oldfd = fd[0];  // next command reads from this pipe
     }
 
 }
